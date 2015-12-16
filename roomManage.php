@@ -12,6 +12,7 @@
 		<title>房间管理</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" type="text/css" href="css\common.css">
+		<link rel="stylesheet" type="text/css" href="css\roomManage.css">
 	</head>
 	<body>
 		<div class="header">
@@ -37,16 +38,19 @@
 		</div>
 		<div class="content">
 			<div class="content-nav">
-				<a href="#"></a>
-				<a href="#"></a>
-				<a href="#"></a>
+				<a href="#">导入房间信息</a>
+				<a href="#">全部房间显示</a>
+				<a href="#">空房显示</a>
 				<a href="#"></a>
 				<a href="#"></a>
 			</div>
 			<div class="content-main">
-				<h3>空房显示</h3>
+				<h3>导入房间信息</h3>
 				<div class="content-mian-sub">
-					
+					<form method="post" action="" enctype="multipart/form-data" class="form-add" >
+						<span class="label">上传房间信息文件</span><input type="file" id="fileUpLoad"><br>
+						<input type="submit" class="submit" value="导入信息"><br>
+					</form>
 				</div>
 			</div>
 		</div>
