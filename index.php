@@ -19,10 +19,10 @@
 				<span>Admain Hotel System</span>
 			</div
 			><div class="nav">
-				<a href="#">订房管理</a>
-				<a href="#">结算管理</a>
-				<a href="#">客房管理</a>
-				<a href="#">账户管理</a>
+				<a href="reservationManage.php">订房管理</a>
+				<a href="balanceManage.php">结算管理</a>
+				<a href="roomManage.php">客房管理</a>
+				<a href="accountManage.php">账户管理</a>
 			</div
 			><div class="shortcut-icon">
 				<button class="icon-search"></button
