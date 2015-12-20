@@ -72,7 +72,34 @@ function reservationRoom($clientName, $IDCard, $phone, $startTime, $endTime, $ty
 	$mysqliObj->close();
 	
 }
-function isAllThisTypeRoomReserved($type ,$data) {
+function findEmptyRoom($type ,$data) {
+	require_once("conn.php");
+	$roomIdEmpty = 0;
+	$sql = "select roomId from roomInfo where type = '$type';";
+	try {
+		$result = $mysqliObj->query($sql);
+	}catch (Exception $e) {
+		echo "Failed to query the room information: " . $e->getMessage() . "\n";
+  		exit();
+	}
+	if ($result && $result->numRows != 0) {
+		while($row = $result->fetch_row())
+		$sql = "select clientName from clientInfo where roomId = '$row[0]';";
+		try {
+			$res = $mysqliObj->query($sql);
+		}catch (Exception $e) {
+			echo "Failed to query the client information: " . $e->getMessage() . "\n";
+  			exit();
+		}
+		
+		if($res->numRows != 0) continue;
+		else {
+			$roomIdEmpty = $row[0];
+			break;
+		}
+	}
 
-}
+	$mysqliObj->close();
+	return $roomIdEmpty;
+}	
 ?>
