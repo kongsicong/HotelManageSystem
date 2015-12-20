@@ -1,0 +1,39 @@
+.form-add {
+	width: 80%;
+	margin: 3% auto 0 auto;
+}
+.form-add>span.label {
+	display: inline-block;
+	width: 30%;
+	height: 70px;
+	text-align: center;
+	color: #6dc3ea
+	
+}
+.form-add>.account-info {
+	display: inline-block;
+	width: 40%;
+	height: 28px;
+	border: 1px solid #6dc3ea;
+}
+.form-add>input.submit {
+	width: 20%;
+	height: 50px;
+	position: relative;
+	left: 30%;
+	border-right: 1px solid gray;
+	font-size: 1.5em;
+}
+.form-add>input.reset {
+	width: 20%;
+	height: 50px;
+	position: relative;
+	left: 30%;
+	font-size: 1.5em;
+}
+.content-main-sub {
+	visibility: hidden;
+}
+.active {
+	visibility: visible;
+}

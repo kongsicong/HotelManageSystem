@@ -3,7 +3,7 @@
 		require_once("conn.php");
 		$username=trim($_POST["username"]);
 		$password=trim($_POST["password"]);
-		$sql = "select * from user where username='$username';";
+		$sql = "select * from manager where username='$username';";
 		$result=$mysqliObj->query($sql);
 		if($result){
 			if($result->num_rows==1){

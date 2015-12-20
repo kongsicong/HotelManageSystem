@@ -1,3 +1,16 @@
+//arg1：子视图链接；arg2：子视图；通过点击不同的子视图链接来切换子视图
+function changeSubView(subViewLink,subView) {
+	for (var i = subViewLink.length - 1; i >= 0; i--) {
+		subViewLink[i].index = i;
+		$(subViewLink[i]).click(function() {
+			subView.prev("h3").text($(this).text());
+			subView.removeClass("active");
+			$(subView[this.index]).addClass("active");
+		});
+	};
+}
+
+
 function validate() {
 
 }

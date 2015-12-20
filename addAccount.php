@@ -12,7 +12,7 @@
 
 	//插入数据库
 	require_once("conn.php");
-	$sql = "insert into user (username, password, email, phone) values ('$username', '$password', '$email', '$phone');";
+	$sql = "insert into manager (username, password, email, phone) values ('$username', '$password', '$email', '$phone');";
 	try {
 		$result = $mysqliObj->query($sql);
 	}catch (Exception $e) {
