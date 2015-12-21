@@ -59,9 +59,14 @@ function showTypeInDetail($id) {
 	return $detail;
 }
 function reservationRoom($clientName, $IDCard, $phone, $startTime, $endTime, $type) {
+	
+	for ($i = $startTime; $i < $endTime; $i++) { 
+ 		if(findEmptyRoom($type, $i)) continue;
+ 		else return 0;
+	}
+	$roomId = findEmptyRoom($type, $startTime);
+	$sql = "insert into clientInfo (clientName, IDCard, phone, startTime, endTime, roomId, type) values ('$clientName', '$IDCard', '$phone', '$startTime', '$endTime', '$roomId', '$type');";
 	require_once("conn.php");
-	$roomId = 101;
-	$sql = "insert into clientInfo (clientName, IDCard, phone, startTime, endTime, roomId) values ('$clientName', '$IDCard', '$phone', '$startTime', '$endTime', '$roomId');";
 	try {
 		$result = $mysqliObj->query($sql);
 	}catch (Exception $e) {
@@ -70,36 +75,43 @@ function reservationRoom($clientName, $IDCard, $phone, $startTime, $endTime, $ty
 	}
 
 	$mysqliObj->close();
+	return 1;
 	
 }
-function findEmptyRoom($type ,$data) {
+function findEmptyRoom($type, $date) {
 	require_once("conn.php");
 	$roomIdEmpty = 0;
-	$sql = "select roomId from roomInfo where type = '$type';";
+	$sql1 = "select roomId from clientInfo where type = '$type' AND '$date' >= startTime AND '$date' < endTime;";
 	try {
-		$result = $mysqliObj->query($sql);
+		$result2 = $mysqliObj->query($sql1);
+	}catch (Exception $e) {
+		echo "Failed to query the clinet information: " . $e->getMessage() . "\n";
+  		exit();
+	}
+	$sql2 = "select roomId from roomInfo where type = '$type';";
+	try {
+		$result = $mysqliObj->query($sql2);
 	}catch (Exception $e) {
 		echo "Failed to query the room information: " . $e->getMessage() . "\n";
   		exit();
 	}
-	if ($result && $result->numRows != 0) {
-		while($row = $result->fetch_row())
-		$sql = "select clientName from clientInfo where roomId = '$row[0]';";
-		try {
-			$res = $mysqliObj->query($sql);
-		}catch (Exception $e) {
-			echo "Failed to query the client information: " . $e->getMessage() . "\n";
-  			exit();
-		}
-		
-		if($res->numRows != 0) continue;
-		else {
-			$roomIdEmpty = $row[0];
-			break;
-		}
+	if($result->num_rows > $result2->num_rows) {
+		$roomIdEmpty = getEmptyRoomId($result, $result2); 
 	}
-
 	$mysqliObj->close();
 	return $roomIdEmpty;
 }	
+function getEmptyRoomId($result1, $result2) {
+	$conflict = 0;
+	while ($row1 = $result1->fetch_array()) {
+		while ($row2 = $result2->fetch_array()) {
+			if ($row1[0] == $row2[0]) {
+				$conflict = 1;
+				break;
+			}else $conflict = 0;
+		}
+		if($conflict == 0)
+		return $row1[0];
+	}
+}
 ?>

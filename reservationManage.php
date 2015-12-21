@@ -12,7 +12,8 @@
 		$startTime = $_POST["startTime"];
 		$endTime = $_POST["endTime"];
 		$type = $_POST["reservationType"];
-		reservationRoom($clientName, $IDCardNumber, $phone, $startTime, $endTime, $type);
+		$res = reservationRoom($clientName, $IDCardNumber, $phone, $startTime, $endTime, $type);
+		if($res) echo "reservation success";
 	}
 ?>
 <!DOCTYPE html>
