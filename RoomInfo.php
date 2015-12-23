@@ -34,17 +34,16 @@ function readRoom($file,$table,$pos){
 	}
 	$mysqliObj->close();
 }
-function showEmptyRoom() {
+function showAllRooms() {
 	require_once("conn.php");
-	$sql = "select roomId,type,price from roomInfo where status = 0 ;";
+	$sql = "select * from roomInfo";
+	$result = null;
 	try {
 		$result = $mysqliObj->query($sql);
 	}catch (Exception $e) {
-		echo "Failed to get the empty romm information: " . $e->getMessage() . "\n";
+		echo "Failed to query the room information: " . $e->getMessage() . "\n";
   		exit();
 	}
-
-	$mysqliObj->close();
 	return $result;
 }
 function showTypeInDetail($id) {
@@ -61,40 +60,67 @@ function showTypeInDetail($id) {
 function reservationRoom($clientName, $IDCard, $phone, $startTime, $endTime, $type) {
 	
 	for ($i = $startTime; $i < $endTime; $i++) { 
- 		if(findEmptyRoom($type, $i)) continue;
+		$roomId = findEmptyRoom($type , $i);
+		echo $roomId."<br>";
+ 		if($roomId != 0) continue;
  		else return 0;
 	}
 	$roomId = findEmptyRoom($type, $startTime);
-	$sql = "insert into clientInfo (clientName, IDCard, phone, startTime, endTime, roomId, type) values ('$clientName', '$IDCard', '$phone', '$startTime', '$endTime', '$roomId', '$type');";
-	require_once("conn.php");
-	try {
-		$result = $mysqliObj->query($sql);
-	}catch (Exception $e) {
-		echo "Failed to insert the client information: " . $e->getMessage() . "\n";
-  		exit();
+	if($roomId) {
+		require_once("conn.php");
+		$sql = "insert into clientInfo (clientName, IDCard, phone) values ('$clientName', '$IDCard', '$phone');";
+		try {
+			$result = $mysqliObj->query($sql);
+		}catch (Exception $e) {
+			echo "Failed to insert the client information: " . $e->getMessage() . "\n";
+	  		exit();
+		}
+		$sql = "insert into reservationInfo (clientId, roomId, startTime, endTime, type) values ('$IDCard', '$roomId', '$startTime', '$endTime', '$type')";
+		try {
+			$result = $mysqliObj->query($sql);
+		}catch (Exception $e) {
+			echo "Failed to insert the reservation information: " . $e->getMessage() . "\n";
+	  		exit();
+		}
+		$mysqliObj->close();
+		return 1;
+	}else {
+		return 0;
 	}
-
-	$mysqliObj->close();
-	return 1;
+	
+	
+	
 	
 }
 function findEmptyRoom($type, $date) {
-	require_once("conn.php");
-	$roomIdEmpty = 0;
-	$sql1 = "select roomId from clientInfo where type = '$type' AND '$date' >= startTime AND '$date' < endTime;";
+	$dbhost ="localhost";
+  	$dbuser = "root";
+  	$dbpwd = "";
+  	$dbname = "test";
+  	try{
+  		$mysqliObj = new mysqli($dbhost,$dbuser,$dbpwd,$dbname);
+  	}
+  	catch(Exception $e){
+  		echo "Failed to get DB handle: " . $e->getMessage() . "\n";
+  		exit();
+  	}
+	$mysqliObj->query("set names utf8;"); 
+	 $roomIdEmpty = 0;
+	 $sql = "select roomId from roomInfo where type = '$type';";
+	 try {
+	 	$result = $mysqliObj->query($sql);
+	 }catch (Exception $e) {
+	 	echo "Failed to query the room information: " . $e->getMessage() . "\n";
+   		exit();
+	 }
+	 $sql = "select roomId from reservationInfo where type = '$type' AND '$date' >= startTime AND '$date' < endTime;";
 	try {
-		$result2 = $mysqliObj->query($sql1);
+		$result2 = $mysqliObj->query($sql);
 	}catch (Exception $e) {
 		echo "Failed to query the clinet information: " . $e->getMessage() . "\n";
   		exit();
 	}
-	$sql2 = "select roomId from roomInfo where type = '$type';";
-	try {
-		$result = $mysqliObj->query($sql2);
-	}catch (Exception $e) {
-		echo "Failed to query the room information: " . $e->getMessage() . "\n";
-  		exit();
-	}
+	
 	if($result->num_rows > $result2->num_rows) {
 		$roomIdEmpty = getEmptyRoomId($result, $result2); 
 	}

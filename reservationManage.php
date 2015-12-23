@@ -5,6 +5,7 @@
 			echo "<META HTTP-EQUIV='Refresh' CONTENT='0; URL=login.php'>";
 		}
 	}
+	$resOfReser = 0;
 	if(isset($_POST['submit'])) {
 		$clientName = $_POST["clientName"];
 		$IDCardNumber = $_POST["IDCardNumber"];
@@ -12,8 +13,8 @@
 		$startTime = $_POST["startTime"];
 		$endTime = $_POST["endTime"];
 		$type = $_POST["reservationType"];
-		$res = reservationRoom($clientName, $IDCardNumber, $phone, $startTime, $endTime, $type);
-		if($res) echo "reservation success";
+		$resOfReser = reservationRoom($clientName, $IDCardNumber, $phone, $startTime, $endTime, $type);
+		//header("url=showReservationInfo.php?isSuccess='$res'");
 	}
 ?>
 <!DOCTYPE html>
@@ -49,15 +50,16 @@
 		</div>
 		<div class="content">
 			<div class="content-nav">
-				
+				<a href="#" class="sub-view-link">房间预订</a>
+				<a href="#" class="sub-view-link">预订信息显示</a>
 			</div>
 			<div class="content-main">
 				<h3>房间预订</h3>
 				<div class="content-main-sub">
 					<form action="reservationManage.php?" method="post" class="form-reservation">
 						<span class="label">客户名</span><input type="text"  class="account-info" name="clientName"><span></span><br>
-						<span class="label">身份证号</span><input type="number" class="account-info"  name="IDCardNumber"><span></span><br>
-						<span class="label">手机号</span><input type="phone" class="account-info"  name="phone"><span></span><br>
+						<span class="label">身份证号</span><input type="text" class="account-info"  name="IDCardNumber"><span></span><br>
+						<span class="label">手机号</span><input type="number" class="account-info"  name="phone"><span></span><br>
 						<span class="label">预订开始时间</span><input type="date" class="account-info"  name="startTime"><span></span><br>
 						<span class="label">预订结束时间</span><input type="date" class="account-info"  name="endTime"><span></span><br>
 						<span class="label">预订房间类型</span><select class="account-info" name="reservationType">
@@ -71,9 +73,21 @@
 																</select><span></span><br>
 						<input type="submit" value="确认" class="submit" name="submit"><input type="reset" value="重置" class="reset">
 					</form>
+					<p>
+						<?php
+						if(isset($_POST['submit'])){
+							if($resOfReser == 1) echo "预订成功";
+							else echo "预订失败";
+						}
+							
+						?>
+					</p>
 				</div>
 				<div class="content-main-sub">
-					
+					<form action="reservationManage.php?" method="post" class="form-reservation">
+						<span class="label">请输入客户名</span><input type="text"  class="account-info" name="clientName"><span></span><br>
+						<input type="submit" value="确认" class="submit" name="submitQuery"><input type="reset" value="重置" class="reset">
+					</form>
 				</div>
 				<div class="content-main-sub">
 					

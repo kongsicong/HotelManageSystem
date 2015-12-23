@@ -16,7 +16,7 @@
 					$_SESSION['userId']=$userId;
 					setcookie('userName',$userName);
 					$_SESSION['userName']=$userName;
-					echo "<META HTTP-EQUIV='Refresh' CONTENT='0; URL=index.php'>";
+					echo "<META HTTP-EQUIV='Refresh' CONTENT='0; URL=roomManage.php'>";
 				}
 			}
 		}

@@ -42,18 +42,18 @@
 		</div>
 		<div class="content">
 			<div class="content-nav">
-				<a href="roomManage.php?show=import">导入房间信息</a>
-				<a href="#">全部房间显示</a>
-				<a href="roomManage.php?show=empty" class="sub-view-link">空房显示</a>
-				<a href="#"></a>
+				<a href="roomManage.php?cmd=import">导入房间信息</a>
+				<a href="roomManage.php?cmd=add">增加房间</a>
+				<a href="roomManage.php?cmd=delete">删除房间</a>
+				<a href="roomManage.php?cmd=modify"></a>
 				<a href="#"></a>
 			</div>
 			<div class="content-main">
 				<h3>导入房间信息</h3>
 				<div class="content-main-sub">
 					<?php 
-						if(isset($_GET["show"]) && !strcmp($_GET["show"],"import")) {
-							echo '<form method="post" action="roomManage.php" enctype="multipart/form-data" class="form-add" >
+						if(isset($_GET["cmd"]) && !strcmp($_GET["cmd"],"import")) {
+							echo '<form method="post" action="roomManage.php" enctype="multipart/form-data" class="form" >
 									<span class="label">上传房间信息文件</span><input type="file" id="fileUpLoad"><br>
 									<input type="submit" class="submit" value="导入信息" name="submitFile"><br>
 							  	</form>';
@@ -61,23 +61,35 @@
 					?>
 				</div>
 				<div class="content-main-sub">
+					<?php
+						if(isset($_GET["cmd"]) && !strcmp($_GET["cmd"],"add")) {
+							echo '<form method="post" action="roomManage.php" class="form">
+									<span class="label">房间号</span><input type="number" class="account-info" name="roomId"><br>
+									<span class="label">房间类型</span><select class="account-info" name="reservationType">
+																<option value="1">单人房标间</option>
+																<option value="2">双人房标间</option>
+																<option value="3">三人房标间</option>
+																<option value="4">单人房豪华间</option>
+																<option value="5">双人房豪华间</option>
+																<option value="6">三人房豪华间</option>
+																<option value="7">总统套房</option>
+																</select><span></span><br>
+									<span class="label">价格</span><input type="number" class="account-info" name="price"><br>
+									<input type="submit" class="submit" value="添加房间" name="submitAdd"><br>
+							</form>';
+						}
+					?>
 				</div>
 				<div class="content-main-sub">
-					<div class="show-empty-room">
-						<?php
-							if(isset($_GET["show"]) && !strcmp($_GET["show"],"empty")) {
-								$emptyRoom = showEmptyRoom();
-								if($emptyRoom) {
-									while ($row = $emptyRoom->fetch_assoc()) {
-										echo "<span>"."房间号：".$row["roomId"]."房间类型：".showTypeInDetail($row["type"])."</span><br>";
-									}
-								}else {
-									echo "<span>select fail</span>";
-								}
+					<?php
+						if(isset($_GET["cmd"]) && !strcmp($_GET["cmd"],"delete")) {
+							require_once("RoomInfo.php");
+							$res = showAllRooms();
+							while ($row = $res->fetch_assoc()) {
+								echo "<div><span>房间号</span>:".$row["roomId"]."  <span>房间类型</span>：".showTypeInDetail($row["type"])."  <span>价格</span>：".$row["price"].'<a href="deleteRoom">删除</a></div>';
 							}
-							
-						?>
-					</div>
+						}
+					?>
 				</div>
 				<div class="content-main-sub">
 				</div>
